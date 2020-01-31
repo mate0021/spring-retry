@@ -16,12 +16,19 @@ public class CallerServiceTest {
     private CallerService callerService;
 
     @Test
-    public void test() {
+    public void shouldCallRecover() {
         try {
             callerService.callRetriableService();
-        } catch (TypeOneException e) {
+        } catch (TypeOneException | TypeTwoException e) {
             e.printStackTrace();
-        } catch (TypeTwoException e) {
+        }
+    }
+
+    @Test
+    public void noNeedForRecoveryCall() {
+        try {
+            callerService.successfullCall();
+        } catch (TypeOneException e) {
             e.printStackTrace();
         }
     }

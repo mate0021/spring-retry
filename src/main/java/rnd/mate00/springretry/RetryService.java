@@ -34,6 +34,22 @@ public class RetryService {
 
     @Recover
     public void recover(Throwable t) {
-        log.info("Recovering from {}", t);
+        log.info("Recovering from {}", t.getMessage());
+    }
+
+    @Retryable(
+            value = {TypeOneException.class},
+            maxAttempts = 3,
+            backoff = @Backoff(2000)
+    )
+    void retrySuccessfully() throws TypeOneException {
+        log.info("First attempt");
+        COUNTER++;
+        if (COUNTER == 1) {
+            log.info("Counter has too low value ({})!", COUNTER);
+            throw new TypeOneException();
+        }
+
+        log.info("Successfully finished. No need to recover.");
     }
 }
