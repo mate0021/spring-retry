@@ -13,8 +13,14 @@ public class RetryByTemplate {
 
     String doSomething() throws TypeOneException {
         String result = retryTemplate.execute(
-                (RetryCallback<String, TypeOneException>) retryContext -> "do with retry",
-                retryContext -> "tried hard, but needs to recover");
+                (RetryCallback<String, TypeOneException>) retryContext -> {
+                    System.out.println("do with retry");
+                    throw new TypeOneException();
+                    },
+                retryContext -> {
+                    System.out.println("recovering");
+                    return "tried hard, but needs to recover";
+                });
 
         return result;
     }

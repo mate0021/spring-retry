@@ -32,4 +32,9 @@ public class CallerServiceTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void willEndUpWithRecover() {
+        callerService.callToRecover();
+    }
 }

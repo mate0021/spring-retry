@@ -2,6 +2,7 @@ package rnd.mate00.springretry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
@@ -14,22 +15,16 @@ public class RetryService {
 
     private static int COUNTER = 0;
 
+    @Autowired
+    private FragileService fragileService;
+
     @Retryable(
             value = {TypeOneException.class, TypeTwoException.class},
             maxAttempts = 3,
             backoff = @Backoff(2000)
     )
     void retry() throws TypeOneException, TypeTwoException {
-        COUNTER++;
-        log.info("Counter value: {}", COUNTER);
-
-        if (COUNTER == 1) {
-            throw new TypeOneException();
-        } else if (COUNTER == 2) {
-            throw new TypeTwoException();
-        } else {
-            throw new RuntimeException();
-        }
+        log.info(fragileService.tryToProcess());
     }
 
     @Recover
@@ -51,5 +46,14 @@ public class RetryService {
         }
 
         log.info("Successfully finished. No need to recover.");
+    }
+
+    @Retryable(
+            value = {RuntimeException.class},
+            maxAttempts = 3,
+            backoff = @Backoff(1000)
+    )
+    void thisAintGonnaWork() {
+        log.info(fragileService.willNeverSucceed());
     }
 }

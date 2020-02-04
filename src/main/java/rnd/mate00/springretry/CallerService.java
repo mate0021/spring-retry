@@ -16,4 +16,8 @@ class CallerService {
     void successfullCall() throws TypeOneException {
         retryService.retrySuccessfully();
     }
+
+    void callToRecover() {
+        retryService.thisAintGonnaWork();
+    }
 }

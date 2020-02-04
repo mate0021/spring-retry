@@ -16,10 +16,11 @@ public class RetryByTemplateTest {
     private RetryByTemplate retryByTemplate;
 
     @Test
-    public void t() {
+    public void shouldUseRecoverInsteadOfCatchingException() {
         try {
             retryByTemplate.doSomething();
         } catch (TypeOneException e) {
+            fail();
             e.printStackTrace();
         }
     }
